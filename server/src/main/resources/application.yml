@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: server
+  output:
+    ansi:
+      enabled: ALWAYS
+
+  # Uncomment the line below to set the server port
+  # server:
+  #   port: 6666
+  data:
+    mongodb:
+      uri: mongodb://127.0.0.1:27017/for_spring?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.1
