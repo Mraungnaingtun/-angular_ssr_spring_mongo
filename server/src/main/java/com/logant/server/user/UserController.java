@@ -1,6 +1,8 @@
 package com.logant.server.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,5 +38,17 @@ public class UserController {
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable String id) {
         userService.deleteUser(id);
+    }
+
+    @GetMapping("/withPagination")
+    public Page<User> getUsersWithPagination(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam(defaultValue = "id,asc") String[] sort) {
+
+        Sort.Direction direction = Sort.Direction.fromString(sort[1]);
+        Sort sortOrder = Sort.by(direction, sort[0]);
+
+        return userService.getPaginatedUsers(page, size, sortOrder);
     }
 }

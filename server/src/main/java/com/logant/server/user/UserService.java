@@ -1,6 +1,9 @@
 package com.logant.server.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -37,5 +40,9 @@ public class UserService {
 
     public void deleteUser(String id) {
         userRepository.deleteById(id);
+    }
+
+    public Page<User> getPaginatedUsers(int page, int size, Sort sort) {
+        return userRepository.findAll(PageRequest.of(page, size, sort));
     }
 }
