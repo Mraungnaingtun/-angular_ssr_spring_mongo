@@ -1,63 +1,54 @@
 package com.logant.server.user;
 
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private  UserService userService;
 
+    // Get all users
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userService.createUser(user);
-    }
-
-    @GetMapping("/email-password")
-    public User getUserByMailAndPassword(@RequestParam String email,@RequestParam String password) {
-        return userService.getUserByEmailAndPassword(email, password);
-    }
-    
-
+    // Get user by ID
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable String id) {
-        return userService.getUserById(id);
+    public ResponseEntity<User> getUserById(@PathVariable String id) {
+        Optional<User> user = userService.getUserById(id);
+        return user.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    // Create a new user
+    @PostMapping
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        User createdUser = userService.createUser(user);
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    }
+
+    // Update an existing user
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable String id, @RequestBody User user) {
-        return userService.updateUser(id, user);
+    public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody User user) {
+        User updatedUser = userService.updateUser(id, user);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
+    // Delete user
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable String id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
         userService.deleteUser(id);
-    }
-
-    @GetMapping("/withPagination")
-    public Page<User> getUsersWithPagination(
-            @RequestParam int page,
-            @RequestParam int size,
-            @RequestParam(defaultValue = "id,asc") String[] sort) {
-
-        Sort.Direction direction = Sort.Direction.fromString(sort[1]);
-        Sort sortOrder = Sort.by(direction, sort[0]);
-
-        return userService.getPaginatedUsers(page, size, sortOrder);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

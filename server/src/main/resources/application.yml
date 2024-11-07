@@ -10,4 +10,4 @@ spring:
   #   port: 6666
   data:
     mongodb:
-      uri: mongodb://127.0.0.1:27017/for_spring?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.1
+      uri: mongodb://127.0.0.1:27017/UserService?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.1
