@@ -6,6 +6,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -24,6 +27,12 @@ public class UserController {
     public User createUser(@RequestBody User user) {
         return userService.createUser(user);
     }
+
+    @GetMapping("/email-password")
+    public User getUserByMailAndPassword(@RequestParam String email,@RequestParam String password) {
+        return userService.getUserByEmailAndPassword(email, password);
+    }
+    
 
     @GetMapping("/{id}")
     public User getUserById(@PathVariable String id) {

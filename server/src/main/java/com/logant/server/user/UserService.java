@@ -38,6 +38,10 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
+    public User getUserByEmailAndPassword(String email, String password) {
+        return userRepository.findByEmailAndPassword(email, password);
+    }
+
     public void deleteUser(String id) {
         userRepository.deleteById(id);
     }
